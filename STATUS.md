@@ -5,7 +5,7 @@
 <!-- close:active -->
 **Dernière étape** : Phase 1 clôturée le 28/08/2026. `/validate docs/plans/phase-1-plan.md` rend un verdict ✅ OK sur les quatre critères de phase. Le squelette technique est en production sur `https://carneo-one.vercel.app`, la page de santé affiche Supabase connecté et le SHA déployé, et un `git push` sur `main` déclenche bien un déploiement automatique (vérifié en 30 secondes avec un commit vide).
 **Prochaine étape recommandée** : `/clear` puis `/plan Phase 2` (schéma des 6 tables, RLS, migrations versionnées, types générés). Bloquant côté humain avant de commencer : le Prérequis du PRD, extraire du carnet constructeur Ford le plan d'entretien (opérations, périodicités km et mois, criticité). Sans lui, la Phase 2 n'a pas de données à modéliser. Prévoir aussi `/challenge` sur le plan de la Phase 2, volontairement sauté en Phase 1.
-**Dernier commit reflété** : `65562e2`
+**Dernier commit reflété** : `29d5c3c`
 
 ## Historique récent
 - 28/08/2026 : Phase 1 ✅ Terminée. Dépôt GitHub public (choix assumé pour le portfolio, aucun secret versionné, push protection GitHub active), projet Vercel branché sur `main`, variables Supabase publiques saisies par David. Deux pièges Vercel consignés dans les Découvertes du plan.
