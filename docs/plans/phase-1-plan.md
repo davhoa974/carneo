@@ -60,6 +60,6 @@ Le **Prérequis** du PRD (extraire du carnet constructeur Ford le plan d'entreti
 
 ## Découvertes (hors plan)
 
-- 28/08/2026 : le MCP Playwright n'est pas installé sur ce projet (aucun `.mcp.json` à la racine, aucun outil `mcp__playwright__*` exposé). Le sous-agent `browser-verifier` tombe en repli `curl`, ce qui ne couvre ni les erreurs console ni le rendu visuel. Bloque le critère "verdict ✅ du `browser-verifier`" de la tâche 6.
+- 28/08/2026 : le MCP Playwright **est** installé et connecté pour ce projet (`claude mcp get playwright` : scope `Local config`, statut `Connected`), mais ses outils `mcp__playwright__*` n'étaient pas exposés à la session en cours, la liste d'outils étant figée au démarrage. Le sous-agent `browser-verifier` tombait donc en repli `curl`. Correctif : redémarrer Claude Code, aucune installation nécessaire. Piège à retenir : l'absence de `.mcp.json` à la racine ne prouve rien, un MCP de scope local est stocké dans `~/.claude.json`.
 - 28/08/2026 : `git ls-files` remonte `tmp/.gitkeep`, ce qui est voulu par le `.gitignore` du projet (`tmp/*` ignoré, `!tmp/.gitkeep` conservé). Le critère de la tâche 4 dit "ne contient pas `tmp/`" : à lire comme "aucun contenu temporaire", le placeholder vide restant légitime.
 - 28/08/2026 : `public/` est désormais vide après suppression des cinq SVG du template. Git ne suit pas les dossiers vides, donc `public/` n'existera pas sur le dépôt distant tant qu'aucun asset n'y sera ajouté (sans conséquence pour Next.js).
