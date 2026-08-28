@@ -27,8 +27,8 @@ Architecture déduite : deux clients Supabase via `@supabase/ssr` (navigateur av
 - [x] **3. Page d'accueil de santé.** Remplacer le template Next.js par un composant serveur affichant le nom du projet, l'état de la connexion Supabase et le SHA du commit déployé (`VERCEL_GIT_COMMIT_SHA`).
   *Fait quand* : `npm run build` passe, la page affiche "Carneo" et un état de connexion lisible, et les cinq SVG de template (`next.svg`, `vercel.svg`, `file.svg`, `globe.svg`, `window.svg`) sont supprimés de `public/`.
 
-- [ ] **4. Repo GitHub privé et push initial.** Vérifier le `.gitignore`, créer le dépôt distant, pousser `main`. Dépend des tâches 1 à 3.
-  *Fait quand* : `git ls-files` ne contient ni `.env`, ni `tmp/`, ni `.next/`, ni `node_modules/` ; le dépôt distant est **privé** ; `git log origin/main --oneline` montre les commits locaux.
+- [x] **4. Repo GitHub public et push initial.** Vérifier le `.gitignore`, créer le dépôt distant, pousser `main`. Dépend des tâches 1 à 3.
+  *Fait quand* : `git ls-files` ne contient ni `.env`, ni `tmp/`, ni `.next/`, ni `node_modules/` ; le dépôt distant est **public** et ne contient aucun secret ; `git log origin/main --oneline` montre les commits locaux.
 
 - [ ] **5. Déploiement Vercel et variables d'environnement.** Connecter le dépôt à Vercel, renseigner les deux variables publiques Supabase dans le dashboard, déclencher le premier déploiement. Dépend de la tâche 4.
   *Fait quand* : le build Vercel est vert et l'URL de production répond 200 sur `/`.
