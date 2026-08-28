@@ -30,19 +30,30 @@ Architecture déduite : deux clients Supabase via `@supabase/ssr` (navigateur av
 - [x] **4. Repo GitHub public et push initial.** Vérifier le `.gitignore`, créer le dépôt distant, pousser `main`. Dépend des tâches 1 à 3.
   *Fait quand* : `git ls-files` ne contient ni `.env`, ni `tmp/`, ni `.next/`, ni `node_modules/` ; le dépôt distant est **public** et ne contient aucun secret ; `git log origin/main --oneline` montre les commits locaux.
 
-- [ ] **5. Déploiement Vercel et variables d'environnement.** Connecter le dépôt à Vercel, renseigner les deux variables publiques Supabase dans le dashboard, déclencher le premier déploiement. Dépend de la tâche 4.
+- [x] **5. Déploiement Vercel et variables d'environnement.** Connecter le dépôt à Vercel, renseigner les deux variables publiques Supabase dans le dashboard, déclencher le premier déploiement. Dépend de la tâche 4.
   *Fait quand* : le build Vercel est vert et l'URL de production répond 200 sur `/`.
   *Répartition* : les valeurs des variables sont saisies **par David**, jamais par l'agent (règle projet, aucun secret ne transite par la conversation). La clé secrète Supabase n'est pas renseignée : elle attend la phase qui l'utilise.
 
-- [ ] **6. Smoke test de production.** Dépend de la tâche 5.
+- [x] **6. Smoke test de production.** Dépend de la tâche 5.
   *Fait quand* : `curl -s https://<url-prod>/api/health` renvoie 200 avec `"supabase":"ok"` ; le sous-agent `browser-verifier` rend un verdict ✅ sur l'URL de production ; un commit vide poussé sur `main` déclenche un nouveau déploiement Vercel qui aboutit (preuve que le déploiement automatique est réellement branché, et pas seulement le premier import).
 
 ## Critère de phase complète
 
-- [ ] Tâches 1 à 6 cochées
-- [ ] L'URL de production affiche la page de santé avec Supabase "ok", depuis un navigateur mobile
-- [ ] Aucun secret n'est présent dans le dépôt distant
-- [ ] Un `git push` sur `main` déclenche un déploiement qui aboutit
+- [x] Tâches 1 à 6 cochées
+- [x] L'URL de production affiche la page de santé avec Supabase "ok", depuis un navigateur mobile
+- [x] Aucun secret n'est présent dans le dépôt distant
+- [x] Un `git push` sur `main` déclenche un déploiement qui aboutit
+
+## Validation Phase 1
+
+Menée le 28/08/2026, méthode A (navigateur réel sur l'URL de production `carneo-one.vercel.app`), complétée par des `curl` et une inspection de l'arbre distant.
+
+- [x] **Tâches 1 à 6 cochées** : 6 sur 6, aucune restante.
+- [x] **Page de santé avec Supabase "ok" depuis un navigateur mobile** : viewport 390x844, titre "Carneo", "Connexion Supabase : connectee (96 ms)", "Commit deploye : 1071ed8", 0 erreur et 0 avertissement en console. En parallèle, `/api/health` renvoie 200 avec `{"status":"ok","supabase":"ok","latency_ms":167}`.
+- [x] **Aucun secret dans le dépôt distant** : arbre `origin/main` inspecté directement, ni `.env`, ni `.mcp.json`, ni `node_modules/`, ni `.next/`, et aucun motif de clé Anthropic ou Supabase.
+- [x] **Un push sur `main` déclenche un déploiement qui aboutit** : commit vide `1071ed8` poussé, production passée de `b2ad6e2` à `1071ed8` en environ 30 secondes sans intervention.
+
+**Verdict : ✅ OK.** La chaîne poste de travail, GitHub, Vercel, Supabase est prouvée bout en bout depuis un navigateur.
 
 ## Hors périmètre de cette phase
 
@@ -63,3 +74,4 @@ Le **Prérequis** du PRD (extraire du carnet constructeur Ford le plan d'entreti
 - 28/08/2026 : le MCP Playwright **est** installé et connecté pour ce projet (`claude mcp get playwright` : scope `Local config`, statut `Connected`), mais ses outils `mcp__playwright__*` n'étaient pas exposés à la session en cours, la liste d'outils étant figée au démarrage. Le sous-agent `browser-verifier` tombait donc en repli `curl`. Correctif : redémarrer Claude Code, aucune installation nécessaire. Piège à retenir : l'absence de `.mcp.json` à la racine ne prouve rien, un MCP de scope local est stocké dans `~/.claude.json`.
 - 28/08/2026 : `git ls-files` remonte `tmp/.gitkeep`, ce qui est voulu par le `.gitignore` du projet (`tmp/*` ignoré, `!tmp/.gitkeep` conservé). Le critère de la tâche 4 dit "ne contient pas `tmp/`" : à lire comme "aucun contenu temporaire", le placeholder vide restant légitime.
 - 28/08/2026 : `public/` est désormais vide après suppression des cinq SVG du template. Git ne suit pas les dossiers vides, donc `public/` n'existera pas sur le dépôt distant tant qu'aucun asset n'y sera ajouté (sans conséquence pour Next.js).
+- 28/08/2026 : sur Vercel, une variable `NEXT_PUBLIC_*` doit etre creee avec le type **Config**, jamais **Secret**. Le type se verrouille a l'enregistrement (un secret est chiffre en ecriture seule, il ne peut plus etre reclasse) : il faut supprimer la variable et la recreer. Vercel refuse d'ailleurs la combinaison prefixe public + type Secret. Deuxieme piege enchaine : une variable existante mais vide vaut absente pour la garde de `src/lib/env.ts`, et une modification de variable ne relance aucun build, il faut un Redeploy en decochant "Use existing Build Cache" (les valeurs `NEXT_PUBLIC_*` sont inlinees dans les artefacts).

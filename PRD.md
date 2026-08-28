@@ -78,7 +78,7 @@ Carneo répond à une question qu'un propriétaire de véhicule ne sait pas tran
 ## 7. Implementation Phases
 
 - **Prérequis (hors code)** — Extraire du carnet constructeur Ford le plan d'entretien complet : opérations, périodicités km et mois, criticité. Cadre tout le reste.
-- **Phase 1** — Squelette technique : Next.js + TypeScript strict + Tailwind, Supabase connecté, déployé sur Vercel, une page. Chaîne complète validée avant toute logique métier.
+- **Phase 1** — Squelette technique : Next.js + TypeScript strict + Tailwind, Supabase connecté, déployé sur Vercel, une page. Chaîne complète validée avant toute logique métier. ✅ Terminée le 2026-08-28
 - **Phase 2** — Schéma et données réelles : 6 tables, RLS, migrations versionnées, types générés, saisie à la main du véhicule et des interventions récentes nécessaires pour éprouver le modèle.
 - **Phase 3** — Lecture et moteur d'échéances ⭐ : fonction pure testée, vue véhicule, historique, écran des prochaines échéances. Jalon de vérité.
 - **Phase 4** — Écriture manuelle : formulaires intervention et relevé, upload de facture, correction et suppression. C'est le substrat que la Phase 5 pré-remplira.
