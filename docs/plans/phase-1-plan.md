@@ -18,13 +18,13 @@ Architecture déduite : deux clients Supabase via `@supabase/ssr` (navigateur av
 
 ## Tâches
 
-- [ ] **1. Garde d'environnement et clients Supabase.** Créer `src/lib/env.ts` (lecture et validation des variables), `src/lib/supabase/server.ts` et `src/lib/supabase/client.ts`.
+- [x] **1. Garde d'environnement et clients Supabase.** Créer `src/lib/env.ts` (lecture et validation des variables), `src/lib/supabase/server.ts` et `src/lib/supabase/client.ts`.
   *Fait quand* : `npm run lint` et `npx tsc --noEmit` sortent avec 0 erreur, `env.ts` exporte `NEXT_PUBLIC_SUPABASE_URL` et `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` typées `string` (et non `string | undefined`), lève une erreur nommant la variable quand elle est absente, et `grep -r "SUPABASE_SECRET_KEY" src/` ne remonte aucun résultat (la clé secrète n'a aucun usage avant la Phase 6).
 
-- [ ] **2. Route de santé `/api/health`.** Créer `src/app/api/health/route.ts` : appel réel à l'API Supabase, mesure de la latence, réponse non mise en cache.
+- [x] **2. Route de santé `/api/health`.** Créer `src/app/api/health/route.ts` : appel réel à l'API Supabase, mesure de la latence, réponse non mise en cache.
   *Fait quand* : en local, `curl -s localhost:3000/api/health` renvoie 200 et un corps `{"status":"ok","supabase":"ok","latency_ms":<nombre>}` ; avec la clé volontairement corrompue dans `.env`, la même commande renvoie 503 avec un champ `reason` non vide ; dans les deux cas la réponse ne contient ni l'URL du projet Supabase ni le moindre fragment de clé.
 
-- [ ] **3. Page d'accueil de santé.** Remplacer le template Next.js par un composant serveur affichant le nom du projet, l'état de la connexion Supabase et le SHA du commit déployé (`VERCEL_GIT_COMMIT_SHA`).
+- [x] **3. Page d'accueil de santé.** Remplacer le template Next.js par un composant serveur affichant le nom du projet, l'état de la connexion Supabase et le SHA du commit déployé (`VERCEL_GIT_COMMIT_SHA`).
   *Fait quand* : `npm run build` passe, la page affiche "Carneo" et un état de connexion lisible, et les cinq SVG de template (`next.svg`, `vercel.svg`, `file.svg`, `globe.svg`, `window.svg`) sont supprimés de `public/`.
 
 - [ ] **4. Repo GitHub privé et push initial.** Vérifier le `.gitignore`, créer le dépôt distant, pousser `main`. Dépend des tâches 1 à 3.
@@ -57,3 +57,9 @@ Le **Prérequis** du PRD (extraire du carnet constructeur Ford le plan d'entreti
 ## Prochaine étape
 
 `/execute docs/plans/phase-1-plan.md`
+
+## Découvertes (hors plan)
+
+- 28/08/2026 : le MCP Playwright n'est pas installé sur ce projet (aucun `.mcp.json` à la racine, aucun outil `mcp__playwright__*` exposé). Le sous-agent `browser-verifier` tombe en repli `curl`, ce qui ne couvre ni les erreurs console ni le rendu visuel. Bloque le critère "verdict ✅ du `browser-verifier`" de la tâche 6.
+- 28/08/2026 : `git ls-files` remonte `tmp/.gitkeep`, ce qui est voulu par le `.gitignore` du projet (`tmp/*` ignoré, `!tmp/.gitkeep` conservé). Le critère de la tâche 4 dit "ne contient pas `tmp/`" : à lire comme "aucun contenu temporaire", le placeholder vide restant légitime.
+- 28/08/2026 : `public/` est désormais vide après suppression des cinq SVG du template. Git ne suit pas les dossiers vides, donc `public/` n'existera pas sur le dépôt distant tant qu'aucun asset n'y sera ajouté (sans conséquence pour Next.js).
