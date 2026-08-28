@@ -39,7 +39,13 @@ project_uses_n8n: false
 ## Stack
 
 <!-- architect:stack -->
-{Liste des technos. Remplie par `/architect` après que tu as validé la proposition. Exemple : Next.js + Supabase + n8n + Vercel.}
+- **Front** : Next.js (App Router) + TypeScript en mode strict + Tailwind CSS
+- **BDD / Auth / Storage** : Supabase (PostgreSQL, RLS active sur toutes les tables, buckets privés pour les factures)
+- **Extraction de factures** : API Claude (`claude-opus-5`, vision + structured outputs) appelée depuis une route serveur Next.js. La clé ne sort jamais du serveur.
+- **Email** : Resend, pour les rappels d'échéance (Phase 7)
+- **Tâches planifiées** : Vercel Cron, pour le recalcul quotidien des échéances
+- **Hosting** : Vercel
+- **Tests** : Vitest sur le moteur d'échéances (coeur métier), Playwright sur les parcours critiques
 <!-- /architect:stack -->
 
 ## Conventions
@@ -164,7 +170,7 @@ Le kit s'adapte à la taille du projet. Trois niveaux, proposés par `/architect
 - **STANDARD** (défaut) — Web app SaaS classique, automation multi-étapes, 2-5 phases. PRD 7 sections, `/challenge` optionnel, `/plan` tâche par tâche.
 - **FULL** — Web app complexe 5+ phases, projet client critique, RLS/multi-tenant strict. `/challenge` systématique, AC scorés, `/validate` inclut audit RLS si données clients.
 
-**Niveau choisi pour ce projet** : `{LITE | STANDARD | FULL}` *(écrit par `/architect` Étape 3.1)*
+**Niveau choisi pour ce projet** : `FULL` *(écrit par `/architect` Étape 3.1 le 28/08/2026)*
 
 Pour changer plus tard, édite cette ligne et relance `/architect`.
 
@@ -227,3 +233,13 @@ Détail complet (parcours, table skills, conditionnels, sous-agent, MCP install)
 ---
 
 **Comprendre le kit complet** → [`docs/KIT.md`](docs/KIT.md) • **Démarrer une session** → `/start`
+
+<!-- BEGIN:nextjs-agent-rules -->
+
+# This is NOT the Next.js you know
+
+This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` (resolved from this file's directory; in monorepos the `next` package may not be visible from the repo root) before writing any code. Heed deprecation notices.
+
+This block is written and re-added by `next dev` — verify at `node_modules/next/dist/server/lib/generate-agent-files.js`. Removing it from a diff only re-creates the uncommitted change; committing it with your work keeps the tree clean.
+
+<!-- END:nextjs-agent-rules -->
