@@ -20,10 +20,7 @@
 ## Learnings (par session, daté)
 
 <!-- close:learnings-index -->
-{Vide au démarrage. Premiers exemples :
-
-- [2026-05-15](memory/learnings/2026-05-15.md) — Phase 1 : squelette + formulaire public + insertion Supabase (3 commits, 4h)
-- [2026-05-22](memory/learnings/2026-05-22.md) — Phase 2 : auth magic link + dashboard pro (5 commits, 6h)}
+- [2026-08-28](memory/learnings/2026-08-28.md) : `/start` cadrage initial puis `/architect` PRD validé, scaffold Next.js + Supabase (2 commits)
 <!-- /close:learnings-index -->
 
 ## Décisions d'architecture
