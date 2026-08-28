@@ -1,0 +1,47 @@
+# Secrets — JAMAIS committer (clés API, tokens, credentials)
+.env
+.env.local
+.env.*.local
+.envrc
+# .mcp.json contient les valeurs en clair des MCP (pattern canonique : .claude/rules/n8n-setup.md § 1.b)
+.mcp.json
+
+# CLAUDE.md est ignoré par défaut dans le kit (chaque fork génère le sien).
+# Ici c'est un projet, pas un kit à redistribuer : le cadrage et les conventions
+# sont versionnés comme le reste du code. Règle retirée le 28/08/2026.
+
+# Node / build
+node_modules/
+.next/
+out/
+dist/
+build/
+*.tsbuildinfo
+
+# Fichiers temporaires (screenshots Playwright, scripts ad-hoc, outputs de skills...)
+# Le dossier tmp/ est gardé dans le repo (via .gitkeep) mais son contenu est ignoré
+tmp/*
+!tmp/.gitkeep
+
+# Logs
+*.log
+
+# Tests
+coverage/
+
+# Deploy tooling
+.vercel
+.turbo
+
+# OS
+.DS_Store
+Thumbs.db
+*.swp
+
+# IDEs (laisser .claude/ committé — c'est l'AI layer du projet)
+.idea/
+.vscode/
+!.vscode/extensions.json
+
+# Worktrees créés par les agents Claude Code (isolation des sessions parallèles)
+.claude/worktrees/
