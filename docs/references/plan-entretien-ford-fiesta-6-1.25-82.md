@@ -1,56 +1,114 @@
-# Plan d'entretien constructeur, Ford Fiesta 6, 1.25 82 ch
+# Plan d'entretien, Ford Fiesta 6, 1.25 82 ch (VIN de David)
 
-> Source : carnet d'entretien constructeur Ford, fourni par David le 28/08/2026.
+> **Source principale : calendrier d'entretien officiel Ford**, obtenu le 29/08/2026 pour le VIN exact
+> du véhicule, via `ford.fr/support/verification-intervalles-entretien` (l'API interrogée est
+> `api.mss.ford.com/digitalservices/fs/api/v2/vehicles/maintenance/schedule`, le VIN voyage en en-tête
+> de requête). Réponse : 20 paliers de 20 000 km ou 1 an, jusqu'à 400 000 km et 20 ans, 49 opérations
+> par palier, identiques d'un palier à l'autre.
+>
+> **Historique de ce fichier.** Il a d'abord été écrit le 28/08/2026 à partir d'un site tiers non
+> officiel, étiqueté à tort « carnet d'entretien constructeur Ford ». Le re-sourçage officiel du
+> 29/08/2026 a corrigé quatre points et en a confirmé trois. Le détail de la confrontation est en fin
+> de fichier, et la source tierce d'origine est conservée pour la traçabilité des deux opérations
+> qu'elle est seule à prescrire.
+>
+> **Piste écartée** : le Manuel du conducteur Ford en ligne (`fordservicecontent.com`,
+> `bookcode=O25675`) ne contient AUCUN plan de révisions. Sommaire complet parcouru, chapitre
+> « Entretien » limité au contrôle des niveaux et aux consommables. Inutile d'y retourner.
+>
 > Sert de source unique au seed de la table `plan_operations` (Phase 2, tâche 6).
 > Ne pas modifier sans reporter le changement dans le seed et inversement.
 
-## Périodicités dépouillées
+## Les 9 opérations du plan
 
-Les deux tableaux du constructeur (par âge et par kilométrage) sont parallèles : chaque prestation
-revient à intervalle régulier, avec un rapport constant de 12 mois pour 20 000 km. Ford suppose
-donc un usage de 20 000 km par an.
+| Opération | `interval_km` | `interval_months` | `first_due_months` | `category` | `criticality` | Source |
+|---|---|---|---|---|---|---|
+| Révision de base | 20000 | 12 | NULL | moteur | critique | Ford officiel |
+| Filtre d'habitacle (changement) | 20000 | 12 | NULL | filtration | confort | Ford officiel |
+| Purge du liquide de frein | NULL | 24 | NULL | freinage | critique | Ford officiel |
+| Kit de courroie de distribution (changement) | 160000 | 96 | NULL | moteur | critique | Ford officiel |
+| Courroie d'entraînement des accessoires (changement) | 160000 | 96 | NULL | moteur | critique | Ford officiel |
+| Purge du liquide de refroidissement | NULL | 120 | NULL | moteur | recommande | Ford officiel |
+| Bougies d'allumage (changement) | 60000 | 36 | NULL | moteur | recommande | **tiers, non confirmé** |
+| Filtre à air (changement) | 60000 | 36 | NULL | filtration | recommande | **tiers, non confirmé** |
+| Contrôle technique | NULL | 24 | 48 | reglementaire | critique | Réglementation française |
 
-| Opération | `interval_km` | `interval_months` | `category` | `criticality` |
-|---|---|---|---|---|
-| Révision de base | 20000 | 12 | moteur | critique |
-| Filtre d'habitacle (changement) | 20000 | 12 | filtration | confort |
-| Purge du liquide de frein | 40000 | 24 | freinage | critique |
-| Bougies d'allumage (changement) | 60000 | 36 | moteur | recommande |
-| Filtre à air (changement) | 60000 | 36 | filtration | recommande |
-| Kit de courroie de distribution (changement) | 160000 | 96 | moteur | critique |
-| Purge du liquide de refroidissement | 200000 | 120 | moteur | recommande |
+**Révision de base** est le palier des 20 000 km ou 1 an. Ford y liste 49 opérations : vidange de
+l'huile moteur et remplacement du filtre à huile, appoints, remise à zéro du témoin, et une
+quarantaine de contrôles (freins, pneus, direction, ceintures, éclairage, fuites, essai sur route).
+Le garage la facture sur une ligne unique et l'extraction de la Phase 5 fera correspondre une ligne
+de facture à une opération : elle est donc modélisée en **une seule** opération, pas en 49. Le détail
+va dans `plan_operations.notes`.
 
-**Révision de base** regroupe : vidange de l'huile moteur, changement du filtre à huile, contrôle du
-véhicule, mise à niveau des fluides, remise à zéro du témoin d'entretien, diagnostic électronique.
-Modélisée comme une opération unique, ce détail va dans `plan_operations.notes` (voir le cadrage du
-plan de Phase 2).
+**Filtre d'habitacle** correspond au « Filtre anti-odeurs, remplacer » que Ford inscrit à chaque
+palier de 20 000 km. À ne pas confondre avec le « Filtre de protection MicronAir » (12 mois ou
+15 000 km), qui est une prestation optionnelle facturée à part, hors plan constructeur.
 
-**Hors carnet constructeur** : le contrôle technique, ajouté au plan comme opération
-`reglementaire`, `interval_months = 24`, `interval_km = NULL`. Sa première échéance (4 ans après la
-première mise en circulation) n'est pas exprimable par un simple intervalle, c'est le point ouvert
-soumis à `/challenge`.
+**Les deux courroies sont distinctes.** Ford prescrit séparément la courroie de distribution
+(opération 21 304 9) et les courroies d'entraînement des accessoires (opération 21 567 5), aux mêmes
+périodicités. Une facture ne mentionnant que « courroie » sera ambiguë, la Phase 5 devra le prévoir.
 
-## Justification des périodicités déduites
+**Liquide de frein et liquide de refroidissement n'ont aucun critère kilométrique.** Ford écrit
+« Tous les 2 ans » et « Tous les 10 ans », sans mention de kilomètres. Le document tiers y avait
+ajouté 40 000 km et 200 000 km, ce qui correspond à ces durées sous l'hypothèse de 20 000 km par an,
+mais ce n'est pas ce que dit le constructeur. `interval_km` reste donc NULL sur ces deux lignes.
 
-Vérification ligne à ligne des deux tableaux sources :
+**Bougies d'allumage et filtre à air : à traiter comme incertains.** Recherche exhaustive dans la
+réponse officielle : zéro occurrence de « bougie », « allumage », « filtre à air ». Ces deux
+opérations ne viennent que du site tiers. Elles sont **conservées** dans le plan par asymétrie des
+conséquences (un faux « à faire » coûte une question au garage, un faux « à jour » coûte une panne),
+et `notes` porte la mention « non prescrit par le calendrier officiel Ford, provient d'une source
+tierce » que la Phase 3 affichera plutôt que de présenter l'échéance comme une certitude.
 
-- Révision de base et filtre d'habitacle : présents à chaque révision, années 1 à 15 et paliers
-  20 000 à 300 000 km.
-- Purge du liquide de frein : années 2, 4, 6, 8, 10, 12, 14 et paliers 40 000, 80 000, 120 000,
-  160 000, 200 000, 240 000, 280 000 km.
-- Bougies d'allumage et filtre à air : années 3, 6, 9, 12, 15 et paliers 60 000, 120 000, 180 000,
-  240 000, 300 000 km.
-- Kit de courroie de distribution : une seule occurrence, année 8 et 160 000 km.
-- Purge du liquide de refroidissement : une seule occurrence, année 10 et 200 000 km.
-
-Les deux dernières périodicités ne sont **pas prouvées** par le document : le tableau s'arrête à
-15 ans et 300 000 km, donc une éventuelle récurrence à 16 ans ou 320 000 km n'y figure pas. Elles
-sont modélisées comme périodiques par prudence : au pire l'application propose une opération déjà
-faite, au mieux elle ne la rate pas. Écart assumé, à revérifier sur le carnet papier si l'occasion
-se présente.
+**Contrôle technique** : hors constructeur. Première échéance 4 ans après la première mise en
+circulation, puis tous les 2 ans. Règle à revérifier sur `service-public.fr` avant l'implémentation
+du moteur d'échéances.
 
 La catégorie `pneumatiques` de l'enum `operation_category` n'est utilisée par aucune opération de ce
-plan : le carnet Ford ne prescrit rien sur les pneus. Elle reste dans l'enum pour les plans futurs.
+plan : Ford ne prescrit aucun remplacement de pneu à échéance, il les classe en pièce d'usure
+remplacée à la demande. Elle reste dans l'enum pour les plans futurs.
+
+## Ce que le calendrier officiel dit d'autre, et qui n'entre pas au plan
+
+Écarté volontairement, pour que personne ne se demande plus tard si c'est un oubli.
+
+- **Contrôle visuel de la carrosserie et de la peinture**, « tous les 12 ou 24 mois en fonction du
+  type de véhicule ». Périodicité non déterminée pour ce véhicule, et sans conséquence mécanique.
+- **Filtre de protection MicronAir**, 12 mois ou 15 000 km. Prestation optionnelle facturée à part.
+- **Option entretien climatisation.** Optionnelle, sur demande du client.
+- **Pièces d'usure** (échappement, amortisseurs, disques et plaquettes, balais d'essuie-glace,
+  pneus) : Ford les liste comme « Remplacer » sans aucune périodicité, elles se changent à l'usure
+  constatée. Elles relèvent de l'intervention ponctuelle (`maintenance_events` avec
+  `plan_operation_id` à NULL), pas du plan.
+
+## Confrontation avec la source tierce d'origine
+
+| Opération | Document tiers (28/08) | Ford officiel (29/08) | Verdict |
+|---|---|---|---|
+| Révision de base | 20 000 km / 12 mois | identique | confirmé |
+| Filtre d'habitacle | 20 000 km / 12 mois | identique | confirmé |
+| Kit de courroie de distribution | 160 000 km / 96 mois | « 160 000 km ou 8 ans, selon première échéance » | confirmé |
+| Purge du liquide de frein | 40 000 km / 24 mois | « Tous les 2 ans », sans critère km | corrigé |
+| Purge du liquide de refroidissement | 200 000 km / 120 mois | « Tous les 10 ans », sans critère km | corrigé |
+| Courroie d'entraînement des accessoires | absente | « 160 000 km ou 8 ans » | ajoutée |
+| Bougies d'allumage | 60 000 km / 36 mois | absente du calendrier | non confirmée, conservée |
+| Filtre à air | 60 000 km / 36 mois | absente du calendrier | non confirmée, conservée |
+
+Le document tiers s'arrêtait à 15 ans et 300 000 km, ce qui laissait croire que la courroie et le
+liquide de refroidissement n'étaient prescrits qu'une seule fois. Le calendrier officiel va jusqu'à
+20 ans et 400 000 km et les énonce comme des règles périodiques explicites. C'est ce qui permet de
+retirer la mention « périodicité déduite » qui figurait sur ces deux lignes.
+
+Corroboration indépendante : une facture d'entretien d'un centre auto, datée du 27/02/2021, mentionne, dans son pavé « prochaines
+étapes », courroie de distribution 160 000 km ou 8 ans, liquide de frein 2 ans, liquide de
+refroidissement 10 ans, et courroie d'accessoires 160 000 km ou 8 ans. Quatre points sur quatre
+concordent avec Ford.
+
+---
+
+# Annexe : la source tierce d'origine
+
+Conservée telle quelle. Elle reste la seule source des bougies d'allumage et du filtre à air.
 
 ## Source brute
 

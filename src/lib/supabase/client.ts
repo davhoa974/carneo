@@ -1,5 +1,7 @@
 import { createBrowserClient } from "@supabase/ssr";
 
+import type { Database } from "@/types/database";
+
 import {
   NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY,
   NEXT_PUBLIC_SUPABASE_URL,
@@ -11,7 +13,7 @@ import {
  * contrepartie de `createSupabaseServerClient`.
  */
 export function createSupabaseBrowserClient() {
-  return createBrowserClient(
+  return createBrowserClient<Database>(
     NEXT_PUBLIC_SUPABASE_URL,
     NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY,
   );

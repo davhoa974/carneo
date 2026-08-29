@@ -1,3 +1,8 @@
+# Données personnelles — JAMAIS committer.
+# Le seed des vraies données de David (plaque, garages, montants, historique).
+# Sa contrepartie committée est supabase/seed.example.sql, valeurs fictives.
+supabase/seed.local.sql
+
 # Secrets — JAMAIS committer (clés API, tokens, credentials)
 .env
 .env.local
@@ -17,6 +22,10 @@ out/
 dist/
 build/
 *.tsbuildinfo
+
+# Snapshots du navigateur de vérification. Ils capturent le contenu RÉEL des
+# pages visitées, donc les données personnelles affichées à l'écran.
+.playwright-mcp/
 
 # Fichiers temporaires (screenshots Playwright, scripts ad-hoc, outputs de skills...)
 # Le dossier tmp/ est gardé dans le repo (via .gitkeep) mais son contenu est ignoré

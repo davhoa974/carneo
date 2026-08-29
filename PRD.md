@@ -36,11 +36,11 @@ Carneo répond à une question qu'un propriétaire de véhicule ne sait pas tran
 
 ### Technique
 - [ ] Auth Supabase + RLS active sur toutes les tables, buckets Storage privés
-- [ ] Lien facture-intervention porté par `maintenance_events.document_id` (une facture, N interventions), et non l'inverse
+- [x] Lien facture-intervention porté par `maintenance_events.document_id` (une facture, N interventions), et non l'inverse
 - [ ] Extraction vision via l'API Claude (`claude-opus-5`, structured outputs) appelée depuis une route serveur Next.js, clé jamais exposée au navigateur
 - [ ] Extraction brute conservée en base (`ocr_data`, `ocr_status`) pour rejouer une correspondance sans rappeler ni repayer l'API
-- [ ] Migrations SQL versionnées dans le repo, aucune modification de schéma via l'interface Supabase
-- [ ] TypeScript strict, types de base générés depuis le schéma Supabase
+- [x] Migrations SQL versionnées dans le repo, aucune modification de schéma via l'interface Supabase
+- [x] TypeScript strict, types de base générés depuis le schéma Supabase
 - [ ] Moteur d'échéances = fonction TypeScript pure, sans accès base, couverte par des tests
 - [ ] Envoi de rappel derrière une interface unique, canal remplaçable sans réécriture
 - [ ] PWA installable : manifest, icônes, service worker
@@ -79,7 +79,7 @@ Carneo répond à une question qu'un propriétaire de véhicule ne sait pas tran
 
 - **Prérequis (hors code)** — Extraire du carnet constructeur Ford le plan d'entretien complet : opérations, périodicités km et mois, criticité. Cadre tout le reste.
 - **Phase 1** — Squelette technique : Next.js + TypeScript strict + Tailwind, Supabase connecté, déployé sur Vercel, une page. Chaîne complète validée avant toute logique métier. ✅ Terminée le 2026-08-28
-- **Phase 2** — Schéma et données réelles : 6 tables, RLS, migrations versionnées, types générés, saisie à la main du véhicule et des interventions récentes nécessaires pour éprouver le modèle.
+- **Phase 2** — Schéma et données réelles : 6 tables, RLS, migrations versionnées, types générés, saisie à la main du véhicule et des interventions récentes nécessaires pour éprouver le modèle. ✅ Terminée le 2026-08-29
 - **Phase 3** — Lecture et moteur d'échéances ⭐ : fonction pure testée, vue véhicule, historique, écran des prochaines échéances. Jalon de vérité.
 - **Phase 4** — Écriture manuelle : formulaires intervention et relevé, upload de facture, correction et suppression. C'est le substrat que la Phase 5 pré-remplira.
 - **Phase 5** — Extraction par photo ⭐ : route serveur d'extraction, écran de revue des interventions proposées, rattachement aux opérations du plan, puis reprise de tout l'historique 2018-2026.
