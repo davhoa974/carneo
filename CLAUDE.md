@@ -68,7 +68,11 @@ project_uses_n8n: false
 ## Design system (si web app)
 
 <!-- design:summary -->
-{Résumé du design system, écrit par `/design` après sa première exécution. 3-5 lignes max : palette principale, famille typographique, philosophie UI. Voir `DESIGN.md` pour les tokens complets.}
+**Carnet d'atelier** : canvas papier crème (`#f7f4ee`), encre `#1a1a17`, primary bleu de Prusse `#1b4965`. Titres en Fraunces (serif), texte en Inter, données numériques en JetBrains Mono tabulaire.
+Radius de base 12px, densité mixte (écran des échéances aéré, historique dense), cibles tactiles 44px, mobile d'abord.
+**Règle non-négociable** : vert / ambre / rouge / gris sont réservés aux quatre états d'échéance (à jour, à faire, en retard, inconnu), jamais décoratifs. Un état s'écrit toujours en toutes lettres à côté de sa couleur.
+Un champ pré-rempli par l'extraction de facture utilise `input-extracted` (bordure pointillée primary) tant que l'utilisateur ne l'a pas validé.
+Tokens complets et do's/don'ts : `DESIGN.md`.
 <!-- /design:summary -->
 
 ## Production
