@@ -43,11 +43,15 @@ export async function inscription(formData: FormData) {
   }
 
   // Une inscription sans session ouverte signifie que Supabase attend une
-  // confirmation par email. C'est le symptôme exact du prérequis P1 non tenu.
+  // confirmation par email. C'est le comportement VOULU depuis le 29/08/2026 :
+  // la confirmation a été désactivée le temps de la Phase 2 puis réactivée
+  // avant la mise en ligne, pour ne pas laisser une inscription ouverte sans
+  // vérification sur une URL publique. Ce n'est donc pas une anomalie à
+  // réparer en la redésactivant.
   if (!data.session) {
     retourAvecErreur(
-      "Compte créé mais aucune session ouverte : la confirmation d'email est " +
-        "encore active sur le projet Supabase (prérequis P1).",
+      "Compte créé. Ouvre l'email de confirmation que Supabase vient de " +
+        "t'envoyer, puis reviens te connecter.",
     );
   }
 
